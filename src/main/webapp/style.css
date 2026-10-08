@@ -1,192 +1,393 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix · Sign In</title>
+  <!-- Font Awesome 6 (free) for subtle icons, optional but enhances UX -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ----- RESET & GLOBAL ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Roboto", system-ui, -apple-system, 'Segoe UI', sans-serif;
+    }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
-}
+    body {
+      background: #0b0b0b;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
 
-body {
-  background: #000;
-  overflow-x: hidden;
-}
+    /* ----- BACKGROUND (fixed, less opaque, more refined) ----- */
+    .background-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://github.com/CanisCoder/jenkins-java-project/blob/master/src/netflixbackground.jpg?raw=true') center/cover no-repeat;
+      opacity: 0.35;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-.background-image {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url(https://github.com/CanisCoder/jenkins-java-project/blob/master/src/netflixbackground.jpg?raw=true) center/cover;
-  opacity: 0.5;
-  z-index: -1;
-}
+    /* subtle dark overlay for better contrast */
+    .background-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 30%, rgba(0,0,0,0.5) 0%, #000 120%);
+      pointer-events: none;
+    }
 
-nav {
-  position: fixed;
-  padding: 25px 60px;
-  z-index: 1;
-}
+    /* ----- NAVIGATION (logo) ----- */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 24px 60px;
+      z-index: 10;
+    }
 
-nav a img {
-  width: 167px;
-}
+    nav a img {
+      width: 160px;
+      display: block;
+      transition: transform 0.2s;
+    }
 
-.form-wrapper {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  border-radius: 4px;
-  padding: 70px;
-  width: 480px;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.75);
-  border: 2px;
-}
+    nav a img:hover {
+      transform: scale(1.02);
+    }
 
-.form-wrapper h2 {
-  color: #fff;
-  font-size: 2rem;
-}
+    /* ----- FORM WRAPPER (card) – modern, clean, accessible ----- */
+    .form-wrapper {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      max-width: 460px;
+      margin: 100px 24px 40px;   /* top margin for nav spacing */
+      padding: 48px 44px 56px;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      transition: all 0.2s ease;
+    }
 
-.form-wrapper form {
-  margin: 25px 0 65px;
-}
+    .form-wrapper h2 {
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      margin-bottom: 28px;
+    }
 
-form .form-control {
-  height: 25px;
-  position: relative;
-  margin-top: 10px;
-  padding-top: 5px;
-  margin-bottom: 20px;
-}
+    /* ----- FORM LAYOUT ----- */
+    .form-wrapper form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-.form-control input {
-  height: 200%;
-  width: 100%;
-  background-color: #262b2e;
-  border: none;
-  outline: none;
-  border-radius: 4px;
-  color: #fff;
-  font-size: 1rem;
-  padding-top: 10px;
-  padding: 5px 20px;
-}
+    /* ----- FORM CONTROLS (input + floating label) ----- */
+    .form-control {
+      position: relative;
+      width: 100%;
+      margin: 0;
+    }
 
-.form-control input:is(:focus, :valid) {
-  background: #444;
-  padding: 20px 30px 5px;
-}
+    .form-control input {
+      width: 100%;
+      height: 56px;
+      background-color: #2c2f33;
+      border: 1px solid #4a4e52;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 1rem;
+      padding: 22px 18px 8px 18px;
+      outline: none;
+      transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+      line-height: 1.2;
+    }
 
-.form-control label {
-  position: absolute;
-  left: 15px;
-  top: 82%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  pointer-events: none;
-  color: #fefafa;
-  transition: all 0.1s ease;
-}
+    /* better focus / valid states */
+    .form-control input:focus {
+      background-color: #3d4145;
+      border-color: #e50914;
+      box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.3);
+    }
 
-.form-control input:is(:focus, :valid) ~ label {
-  font-size: 0.75rem;
-  align-items: center;
-  transform: translateY(-130%);
-}
+    .form-control input:is(:focus, :valid) {
+      background-color: #3d4145;
+    }
 
-form button {
-  width: 100%;
-  padding: 16px 0;
-  font-size: 1rem;
-  background: #e50914;
-  color: #fff;
-  font-weight: 500;
-  border-radius: 4px;
-  border: none;
-  outline: none;
-  margin: 25px 0 10px;
-  cursor: pointer;
-  transition: 0.1s ease;
-}
+    /* floating label */
+    .form-control label {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #a0a0a0;
+      font-size: 1rem;
+      pointer-events: none;
+      transition: all 0.15s cubic-bezier(0.2, 0.9, 0.4, 1);
+      background: transparent;
+      padding: 0 4px;
+    }
 
-form button:hover {
-  background: #c40812;
-}
+    /* move label when focused or filled */
+    .form-control input:focus ~ label,
+    .form-control input:not(:placeholder-shown) ~ label {
+      top: 14px;
+      transform: translateY(0) scale(0.78);
+      color: #e50914;
+      font-weight: 500;
+      left: 14px;
+      background: transparent;
+    }
 
-.form-wrapper a {
-  text-decoration: none;
-}
+    /* little helper: hide placeholder to avoid overlap */
+    .form-control input::placeholder {
+      color: transparent;
+      opacity: 0;
+    }
 
-.form-wrapper a:hover {
-  text-decoration: underline;
-}
+    /* ----- REMEMBER / FORGOT row ----- */
+    .form-help {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      margin: 6px 0 8px;
+    }
 
-.form-wrapper :where(label, p, small, a) {
-  color: #b3b3b3;
-}
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #b3b3b3;
+      cursor: pointer;
+    }
 
-form .form-help {
-  display: flex;
-  justify-content: space-between;
-}
+    .remember-me input {
+      width: 16px;
+      height: 16px;
+      accent-color: #e50914;
+      cursor: pointer;
+      margin: 0;
+    }
 
-form .remember-me {
-  display: flex;
-}
+    .form-help a {
+      color: #b3b3b3;
+      text-decoration: none;
+      transition: color 0.2s;
+      font-size: 0.9rem;
+    }
 
-form .remember-me input {
-  margin-right: 5px;
-  accent-color: #b3b3b3;
-}
+    .form-help a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
 
-form .form-help :where(label, a) {
-  font-size: 0.9rem;
-}
+    /* ----- SIGN IN BUTTON ----- */
+    form button {
+      width: 100%;
+      padding: 16px 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: #e50914;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      margin-top: 8px;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+    }
 
-.form-wrapper p a {
-  color: #fff;
-}
+    form button:hover {
+      background: #f6121d;
+      box-shadow: 0 6px 16px rgba(229, 9, 20, 0.5);
+    }
 
-.form-wrapper small {
-  display: block;
-  margin-top: 15px;
-  color: #b3b3b3;
-}
+    form button:active {
+      transform: scale(0.98);
+      background: #c40812;
+    }
 
-.form-wrapper small a {
-  color: #0071eb;
-}
+    /* ----- SIGN-UP / FOOTER TEXT ----- */
+    .form-wrapper p {
+      color: #b3b3b3;
+      margin-top: 24px;
+      font-size: 1rem;
+      font-weight: 400;
+    }
 
-@media (max-width: 740px) {
-  body::before {
-    display: none;
-  }
+    .form-wrapper p a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      margin-left: 6px;
+      transition: color 0.2s;
+    }
 
-  nav,
-  .form-wrapper {
-    padding: 20px;
-  }
+    .form-wrapper p a:hover {
+      color: #e50914;
+      text-decoration: underline;
+    }
 
-  nav a img {
-    width: 140px;
-  }
+    .form-wrapper small {
+      display: block;
+      margin-top: 18px;
+      color: #8c8c8c;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
 
-  .form-wrapper {
-    width: 80%;
-    padding: 40px;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -30%);
-  }
+    .form-wrapper small a {
+      color: #0071eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-  .form-wrapper form {
-    margin: 25px 0 20px;
-  }
+    .form-wrapper small a:hover {
+      text-decoration: underline;
+      color: #1a8cff;
+    }
 
-  .form-control label {
-    top: 80%;
-  }
-}
+    /* ----- RESPONSIVE FINE-TUNING ----- */
+    @media (max-width: 740px) {
+      nav {
+        padding: 18px 24px;
+      }
+
+      nav a img {
+        width: 130px;
+      }
+
+      .form-wrapper {
+        margin: 90px 20px 40px;
+        padding: 36px 28px 44px;
+        max-width: 100%;
+      }
+
+      .form-wrapper h2 {
+        font-size: 1.8rem;
+        margin-bottom: 22px;
+      }
+
+      .form-control input {
+        height: 52px;
+        font-size: 0.95rem;
+        padding: 20px 16px 6px 16px;
+      }
+
+      .form-control label {
+        left: 16px;
+        font-size: 0.95rem;
+      }
+
+      .form-help {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      form button {
+        padding: 14px 0;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .form-wrapper {
+        padding: 28px 20px 36px;
+        margin: 80px 16px 30px;
+      }
+
+      .form-wrapper h2 {
+        font-size: 1.6rem;
+      }
+
+      .form-control input {
+        height: 50px;
+        padding: 18px 14px 4px 14px;
+      }
+
+      .form-control label {
+        left: 14px;
+      }
+
+      .form-control input:focus ~ label,
+      .form-control input:not(:placeholder-shown) ~ label {
+        left: 10px;
+      }
+    }
+
+    /* remove default outline for better aesthetics, keep keyboard accessible */
+    input:focus-visible,
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid #e50914;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="background-image"></div>
+
+  <nav>
+    <a href="#" aria-label="Netflix home">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix logo">
+    </a>
+  </nav>
+
+  <div class="form-wrapper">
+    <h2>Sign In</h2>
+
+    <form action="#" method="post">
+      <!-- Email / phone -->
+      <div class="form-control">
+        <input type="email" id="email" name="email" placeholder=" " required autocomplete="email">
+        <label for="email">Email or phone number</label>
+      </div>
+
+      <!-- Password -->
+      <div class="form-control">
+        <input type="password" id="password" name="password" placeholder=" " required autocomplete="current-password">
+        <label for="password">Password</label>
+      </div>
+
+      <!-- Remember + forgot -->
+      <div class="form-help">
+        <label class="remember-me">
+          <input type="checkbox" checked> Remember me
+        </label>
+        <a href="#">Need help?</a>
+      </div>
+
+      <button type="submit">Sign In</button>
+    </form>
+
+    <!-- Sign-up prompt -->
+    <p>
+      New to Netflix?
+      <a href="#">Sign up now</a>
+    </p>
+
+    <!-- reCAPTCHA / disclaimer -->
+    <small>
+      This page is protected by Google reCAPTCHA to ensure you're not a bot.
+      <a href="#">Learn more.</a>
+    </small>
+  </div>
+</body>
+</html>
